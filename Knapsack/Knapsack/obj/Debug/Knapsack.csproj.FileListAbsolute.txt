@@ -1,0 +1,7 @@
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\bin\Debug\Knapsack.exe.config
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\bin\Debug\Knapsack.exe
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\bin\Debug\Knapsack.pdb
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.csprojAssemblyReference.cache
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.csproj.CoreCompileInputs.cache
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.exe
+C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.pdb
