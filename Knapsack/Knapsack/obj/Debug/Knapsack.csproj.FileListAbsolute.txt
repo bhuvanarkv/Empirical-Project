@@ -5,3 +5,10 @@ C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Kn
 C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.csproj.CoreCompileInputs.cache
 C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.exe
 C:\Users\bhuva\Desktop\TCSS 543 Empirical project\Knapsack\Knapsack\obj\Debug\Knapsack.pdb
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\obj\Debug\Knapsack.exe
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\obj\Debug\Knapsack.pdb
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\obj\Debug\Knapsack.csprojAssemblyReference.cache
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\obj\Debug\Knapsack.csproj.CoreCompileInputs.cache
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\bin\Debug\Knapsack.exe.config
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\bin\Debug\Knapsack.exe
+C:\Users\8008m\Documents\Empirical-Project\Knapsack\Knapsack\bin\Debug\Knapsack.pdb

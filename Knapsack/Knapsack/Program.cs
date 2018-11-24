@@ -77,21 +77,16 @@ namespace Knapsack
          * */
         public int KnapSackTopDown(int n, int W, int[,] T, int[] weight, int[] value)
         {
-            int value;
             if (T[n, W] < 0)
             {
-                if (W < weight[W])
+                if (W < weight[n])
                 {
-                    if (W < weight[n])
-                    {
-                        value = KnapSackTopDown(n - 1, W, T, weight, value);
-                    }
-                    else
-                    {
-                        value = Math.Max(KnapSackTopDown(n - 1, W, T, weight, value), value[n] + KnapSackTopDown(n - 1, W - weight[n], T, weight, value));
-                    }
+                    T[n, W] = KnapSackTopDown(n - 1, W, T, weight, value);
                 }
-                T[n, W] = value;
+                else
+                {
+                    T[n, W] = Math.Max(KnapSackTopDown(n - 1, W, T, weight, value), value[n] + KnapSackTopDown(n - 1, W - weight[n], T, weight, value));
+                }
             }
             return T[n, W];
         }
@@ -137,27 +132,37 @@ namespace Knapsack
             s_bottomup.Start();
             result = knapSack.KnapSackBottomUp(n, W, val, wt);
             s_bottomup.Stop();
-            Console.WriteLine(string.Format("Bottom Up - Best value: {0}\n", result));
+            Console.WriteLine(string.Format("Bottom Up - Best value: {0}", result));
 
             //Fill T array with -1, except first row and column which are filled with 0
             int[,] T = new int[n, W];
-            for (int i = 0; i < T.Length; i++)
+            for (int i = 0; i < n; i++)
             {
-                T[0][i] = 0;
-                T[i][0] = 0;
-            }
-            for (int i = 1; i < n; i++)
-            {
-                for (int j = 1; j < W; j++)
+                for (int j = 0; j < W; j++)
                 {
-                    T[n][W] = -1;
+                    if (i == 0 || j == 0)
+                    {
+                        T[i,j] = 0;
+                    }
+                    else
+                    {
+                        T[i,j] = -1;
+                    }
                 }
             }
             var s_topdown = new Stopwatch();
             s_topdown.Start();
-            result = knapSack.KnapSackTopDown(n, W, T, wt, val);
+            result = knapSack.KnapSackTopDown(n - 1, W - 1, T, wt, val);
             s_topdown.Stop();
             Console.WriteLine(string.Format("Top Down - Best value: {0}\n", result));
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < W; j++)
+                {
+                    Console.Write(string.Format("{0} ", T[i, j]));
+                }
+                Console.Write(Environment.NewLine + Environment.NewLine);
+            }
 
             //Print times for every algorithm
             Console.WriteLine("Time taken for the BruteForce algorithm: {0}", s_bruteforce.Elapsed.ToString());
