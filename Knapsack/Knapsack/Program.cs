@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,7 +13,7 @@ namespace Knapsack
     class KnapSack
     {
         public int BestValue;
-
+        public ArrayList opt = new ArrayList();
         /*
          * Implementation of the brute-force knapsack algorithm.
          * n is the number of items.
@@ -85,6 +86,7 @@ namespace Knapsack
                         Value[i, j] = Math.Max(Value[i - 1, j], Value[i - 1, j - wt[i - 1]] + value[i - 1]);
                 }
             }
+            RecoverOptimalSubset(Value, value, wt, n - 1, W - 1);
             return Value[n, W];
         }
 
@@ -99,7 +101,6 @@ namespace Knapsack
          * */
         public int KnapSackTopDown(int n, int W, int[,] T, int[] weight, int[] value)
         {
-            int result = -1;
             //base case
             if (n == 0 || W == 0) {
                 return 0;
@@ -119,6 +120,20 @@ namespace Knapsack
                 }
             }
             return T[n, W];
+        }
+
+        public void RecoverOptimalSubset(int[,] T, int[] value, int[] wt, int n, int W) {
+            int result = T[n, W];
+            int w = W;
+            for (int i = n; i > 0 && result > 0; i--) {
+                if (result == T[i - 1, W])
+                    continue;
+                else {
+                    opt.Add(i);
+                    result = result - value[i - 1];
+                    w = w - wt[i - 1];
+                }
+            }
         }
     }
 
@@ -163,6 +178,9 @@ namespace Knapsack
             result = knapSack.KnapSackBottomUp(n, W, val, wt);
             s_bottomup.Stop();
             Console.WriteLine(string.Format("Bottom Up - Best value: {0}", result));
+            foreach ( Object obj in knapSack.opt )
+                Console.Write( "   {0}", obj );
+            Console.WriteLine();
 
             //Fill T array with -1, except first row and column which are filled with 0
             int[,] T = new int[n, W];
