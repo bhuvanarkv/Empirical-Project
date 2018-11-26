@@ -12,21 +12,29 @@ namespace Knapsack
     class KnapSack
     {
         public int BestValue;
-        public int KnapSackBruteForce(int number, int Capacity, int[] value, int[] wt)
+
+        /*
+         * Implementation of the brute-force knapsack algorithm.
+         * n is the number of items.
+         * W is the capacity of the knapsack.
+         * value is the values of the items.
+         * wt is the weights of the items.
+         * Return the value of the best optimal subset.
+         * */
+        public int KnapSackBruteForce(int n, int W, int[] value, int[] wt)
         {
             var bestValue = 0;
             var bestPosition = 0;
-            var size = number;
 
-            if (size == 0 || Capacity == 0)
+            if (n == 0 || W == 0)
                 return 0;
 
-            var n = (long)Math.Pow(2, size);
-            for (var i = 0; i < n; i++)
+            var n_2 = (long)Math.Pow(2, n);
+            for (var i = 0; i < n_2; i++)
             {
                 var total = 0;
                 var weight = 0;
-                for (var j = 0; j < size; j++)
+                for (var j = 0; j < n; j++)
                 {
                     // if bit not included then skip
                     if (((i >> j) & 1) != 1) continue;
@@ -35,7 +43,7 @@ namespace Knapsack
                     weight += wt[j];
                 }
 
-                if (weight <= Capacity && total > bestValue)
+                if (weight <= W && total > bestValue)
                 {
                     bestPosition = i;
                     bestValue = total;
@@ -45,25 +53,39 @@ namespace Knapsack
 
             return BestValue;
         }
-        public int KnapSackBottomUp(int number, int Capacity, int[] value, int[] wt)
+
+        /*
+         * Implementation of bottom-up knapsack algorithm.
+         * n is the number of items.
+         * W is the capacity of the knapsack.
+         * value is the value of the items.
+         * wt is the weight of the items.
+         * Return the maximum value for this set of items and this capacity.
+         * */
+        public int KnapSackBottomUp(int n, int W, int[] value, int[] wt)
         {
-            var size = number;
-            int[,] Value = new int[size + 1, Capacity + 1];
-            if (size == 0 || Capacity == 0)
+            //Result array
+            int[,] Value = new int[n + 1, W + 1];
+            //Base Case
+            if (n == 0 || W == 0)
                 return 0;
-            for (int i = 0; i <= size; i++)
+            //Iterative Case
+            for (int i = 0; i <= n; i++)
             {
-                for (int j = 0; j <= Capacity; j++)
+                for (int j = 0; j <= W; j++)
                 {
+                    //Set first row and column to 0
                     if (i == 0 || j == 0)
                         Value[i, j] = 0;
+                    //item i is not included
                     else if (wt[i - 1] > j)
                         Value[i, j] = Value[i - 1, j];
+                    //item i is included, take max of either taking i or not taking i
                     else
                         Value[i, j] = Math.Max(Value[i - 1, j], Value[i - 1, j - wt[i - 1]] + value[i - 1]);
                 }
             }
-            return Value[size, Capacity];
+            return Value[n, W];
         }
 
         /*
@@ -77,14 +99,22 @@ namespace Knapsack
          * */
         public int KnapSackTopDown(int n, int W, int[,] T, int[] weight, int[] value)
         {
+            int result = -1;
+            //base case
+            if (n == 0 || W == 0) {
+                return 0;
+            }
+            //recursive case
             if (T[n, W] < 0)
             {
                 if (W < weight[n])
                 {
+                    //item is not included in optimal set
                     T[n, W] = KnapSackTopDown(n - 1, W, T, weight, value);
                 }
                 else
                 {
+                    //either don't take current item or take current item
                     T[n, W] = Math.Max(KnapSackTopDown(n - 1, W, T, weight, value), value[n] + KnapSackTopDown(n - 1, W - weight[n], T, weight, value));
                 }
             }
