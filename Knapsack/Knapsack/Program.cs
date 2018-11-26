@@ -86,7 +86,7 @@ namespace Knapsack
                         Value[i, j] = Math.Max(Value[i - 1, j], Value[i - 1, j - wt[i - 1]] + value[i - 1]);
                 }
             }
-            RecoverOptimalSubset(Value, value, wt, n - 1, W - 1);
+            RecoverOptimalSubset(Value, value, wt, n, W);
             return Value[n, W];
         }
 
@@ -126,10 +126,10 @@ namespace Knapsack
             int result = T[n, W];
             int w = W;
             for (int i = n; i > 0 && result > 0; i--) {
-                if (result == T[i - 1, W])
+                if (result == T[i - 1, w])
                     continue;
                 else {
-                    opt.Add(i);
+                    opt.Add(i - 1);
                     result = result - value[i - 1];
                     w = w - wt[i - 1];
                 }
