@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -108,7 +108,7 @@ namespace Knapsack
             //recursive case
             if (T[n, W] < 0)
             {
-                if (W < weight[n])
+                if (W < weight[n-1])
                 {
                     //item is not included in optimal set
                     T[n, W] = KnapSackTopDown(n - 1, W, T, weight, value);
@@ -116,7 +116,7 @@ namespace Knapsack
                 else
                 {
                     //either don't take current item or take current item
-                    T[n, W] = Math.Max(KnapSackTopDown(n - 1, W, T, weight, value), value[n] + KnapSackTopDown(n - 1, W - weight[n], T, weight, value));
+                    T[n, W] = Math.Max(KnapSackTopDown(n - 1, W, T, weight, value), value[n-1] + KnapSackTopDown(n - 1, W - weight[n-1], T, weight, value));
                 }
             }
             return T[n, W];
@@ -183,10 +183,10 @@ namespace Knapsack
             Console.WriteLine();
 
             //Fill T array with -1, except first row and column which are filled with 0
-            int[,] T = new int[n, W];
-            for (int i = 0; i < n; i++)
+            int[,] T = new int[n+1, W+1];
+            for (int i = 0; i <=n; i++)
             {
-                for (int j = 0; j < W; j++)
+                for (int j = 0; j <=W; j++)
                 {
                     if (i == 0 || j == 0)
                     {
@@ -200,7 +200,7 @@ namespace Knapsack
             }
             var s_topdown = new Stopwatch();
             s_topdown.Start();
-            result = knapSack.KnapSackTopDown(n - 1, W - 1, T, wt, val);
+            result = knapSack.KnapSackTopDown(n, W, T, wt, val);
             s_topdown.Stop();
             Console.WriteLine(string.Format("Top Down - Best value: {0}\n", result));
             for (int i = 0; i < n; i++)
