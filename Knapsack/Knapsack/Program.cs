@@ -63,7 +63,7 @@ namespace Knapsack
          * wt is the weight of the items.
          * Return the maximum value for this set of items and this capacity.
          * */
-        public int KnapSackBottomUp(int n, int W, int[] value, int[] wt)
+        public int KnapSackBottomUpDP(int n, int W, int[] value, int[] wt)
         {
             //Result array
             int[,] Value = new int[n + 1, W + 1];
@@ -99,7 +99,7 @@ namespace Knapsack
          * value is the array of values
          * Return T[n, W] will be the maximum possible value for this instance of the knapsack problem.
          * */
-        public int KnapSackTopDown(int n, int W, int[,] T, int[] weight, int[] value)
+        public int KnapSackTopDownDP(int n, int W, int[,] T, int[] weight, int[] value)
         {
             //base case
             if (n == 0 || W == 0) {
@@ -111,18 +111,19 @@ namespace Knapsack
                 if (W < weight[n-1])
                 {
                     //item is not included in optimal set
-                    T[n, W] = KnapSackTopDown(n - 1, W, T, weight, value);
+                    T[n, W] = KnapSackTopDownDP(n - 1, W, T, weight, value);
                 }
                 else
                 {
                     //either don't take current item or take current item
-                    T[n, W] = Math.Max(KnapSackTopDown(n - 1, W, T, weight, value), value[n-1] + KnapSackTopDown(n - 1, W - weight[n-1], T, weight, value));
+                    T[n, W] = Math.Max(KnapSackTopDownDP(n - 1, W, T, weight, value), value[n-1] + KnapSackTopDownDP(n - 1, W - weight[n-1], T, weight, value));
                 }
             }
             return T[n, W];
         }
-
-        public void RecoverOptimalSubset(int[,] T, int[] value, int[] wt, int n, int W) {
+        //Backtracking to find indices of chosen items 
+        public void RecoverOptimalSubset(int[,] T, int[] value, int[] wt, int n, int W)
+        {
             int result = T[n, W];
             int w = W;
             for (int i = n; i > 0 && result > 0; i--) {
@@ -142,24 +143,25 @@ namespace Knapsack
     {
         static void Main(string[] args)
         {
-            // Generate knapsack objects
+            // Generate knapsack object
             var knapSack = new KnapSack();
 
             //Read W and n from user.
             Console.WriteLine("Enter Capacity of KnapSack(W):");
             int W = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Enter Value of n:");
+            
+             Console.WriteLine("Enter Value of n:");
             int n = Int32.Parse(Console.ReadLine());
-
+            
             //Create value and weight arrays
-            //Values are random in the range from 1-20, weights are random in the range from 1 to capacity / 2
+            //Values are random in the range from 1-20, weights are random in the range from capacity/6 to capacity / 2
             int[] val = new int[n];
             int[] wt = new int[n];
             Random rand = new Random();            
             for (int i = 0; i < n; i++)
             {
                 val[i] = rand.Next(1,20);
-                wt[i] = rand.Next(1, W / 2);
+                wt[i] = rand.Next(W/6, W / 2);
                 Console.WriteLine("Value of" + i + "=" + val[i] + "," + "Weight of" + i + "=" + wt[i]);
             }
             Console.WriteLine("\nCapacity of KnapSack(W): {0}\n", W);
@@ -175,24 +177,23 @@ namespace Knapsack
             //Create timer for bottom-up, call bottom-up, stop timer, log result
             var s_bottomup = new Stopwatch();
             s_bottomup.Start();
-            result = knapSack.KnapSackBottomUp(n, W, val, wt);
+            result = knapSack.KnapSackBottomUpDP(n, W, val, wt);
             s_bottomup.Stop();
-            Console.WriteLine(string.Format("Bottom Up - Best value: {0}", result));
-            foreach ( Object obj in knapSack.opt )
-                Console.Write( "   {0}", obj );
-            Console.WriteLine();
+            Console.WriteLine(string.Format("Bottom Up Dynamic Programming- Best value: {0}", result));
 
-            //Fill T array with -1, except first row and column which are filled with 0
+            //Fill T array with -1 to indicate value has not been calculated at that location
+            //Except first row and column which are filled with 0; to avoid array out of bound exception
             int[,] T = new int[n+1, W+1];
             for (int i = 0; i <=n; i++)
             {
                 for (int j = 0; j <=W; j++)
                 {
+                    //set 0th column and row to 0
                     if (i == 0 || j == 0)
                     {
                         T[i,j] = 0;
                     }
-                    else
+                    else //remaining cells to -1
                     {
                         T[i,j] = -1;
                     }
@@ -200,22 +201,22 @@ namespace Knapsack
             }
             var s_topdown = new Stopwatch();
             s_topdown.Start();
-            result = knapSack.KnapSackTopDown(n, W, T, wt, val);
+            result = knapSack.KnapSackTopDownDP(n, W, T, wt, val);
             s_topdown.Stop();
-            Console.WriteLine(string.Format("Top Down - Best value: {0}\n", result));
-            for (int i = 0; i < n; i++)
+            Console.WriteLine(string.Format("Top Down Dynamic Programming - Best value: {0}\n", result));
+            //when n=0, no element is chosen hence this step can be skipped
+            if (n>0) 
             {
-                for (int j = 0; j < W; j++)
-                {
-                    Console.Write(string.Format("{0} ", T[i, j]));
-                }
-                Console.Write(Environment.NewLine + Environment.NewLine);
+                Console.WriteLine("Indices of items in the optimal set:");
+                foreach (Object obj in knapSack.opt)
+                    Console.Write("   {0}", obj);
+                Console.WriteLine();
             }
 
             //Print times for every algorithm
             Console.WriteLine("Time taken for the BruteForce algorithm: {0}", s_bruteforce.Elapsed.ToString());
-            Console.WriteLine("Time taken for the Bottomup algorithm: {0}\n", s_bottomup.Elapsed.ToString());
-            Console.WriteLine("Time taken for the Top Down algorithm: {0}\n", s_topdown.Elapsed.ToString());
+            Console.WriteLine("Time taken for the Bottom-up algorithm: {0}", s_bottomup.Elapsed.ToString());
+            Console.WriteLine("Time taken for the Top-Down algorithm: {0}", s_topdown.Elapsed.ToString());
             Console.ReadKey();
         }
     }
